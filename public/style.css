@@ -1,0 +1,51 @@
+body {
+  margin: 0;
+}
+
+.topnav {
+  background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 6vh;
+  position: relative; /* Important for positioning the glow */
+  border-bottom: solid #7E0000;
+  z-index: 1;
+}
+
+.topnav a {
+  float: left;
+  text-align: center;
+  padding: 14px 16px;
+  min-width: 170px;
+  height: fit-content;
+  text-decoration: none;
+  font-family: 'Lato', sans-serif;
+  letter-spacing: 1px;
+  font-size: 18px;
+  color: white;
+}
+
+.topnav a.active {
+  background: #7E0000;
+  color: white;
+  min-width: 170px;
+}
+
+/* Top Button */
+.topButton {
+  margin: 2px;
+  min-width: 170px; /* Fixes width issue on smaller displays | Should be black when not selected */
+  cursor: pointer;
+  border: none;
+  color: white;
+  transition: ease-in 0.2s;
+  background: linear-gradient(to left, rgb(0, 0, 0) 50%, #7E0000 50%, #7E0000 100%) right;
+  background-size: 200%;
+}
+
+.topButton:hover {
+  background-position: left;
+  color: white;
+}
+/* Top Button End */
