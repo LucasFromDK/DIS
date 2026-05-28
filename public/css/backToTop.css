@@ -1,0 +1,67 @@
+/* Back to Top Button */
+#backToTop {
+  position: fixed;
+  bottom: 10px;
+  right: var(--sideDistance);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background-color: var(--color-surface-high);
+  color: var(--color-on-surface-high);
+  border: none;
+  border-radius: var(--rounded-sm);
+  padding: var(--space-xs);
+  cursor: pointer;
+  transition: var(--duration-hover) ease-out;
+  animation: fade-in var(--duration-200) ease-out forwards;
+  overflow: hidden;
+  z-index: 10;
+  box-shadow: var(--shadow-2);
+}
+
+#backToTop * {
+  pointer-events: none;
+}
+
+#backToTop:hover {
+  background-color: var(--color-surface-higher);
+  box-shadow: var(--shadow-3);
+}
+
+#backToTop:hover svg {
+  animation-delay: var(--duration-200);
+  animation-name: fly-out-in;
+  animation-duration: var(--duration-800);
+  animation-timing-function: ease-out;
+  animation-direction: forwards;
+}
+
+#backToTop:not(:hover) svg {
+  animation: fade-in var(--duration-300) ease-out forwards;
+}
+
+@keyframes fly-out-in {
+  0% {
+    transform: translateY(0);
+  }
+  49.9% {
+    transform: translateY(-400%);
+  }
+  50% {
+    transform: translateY(400%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

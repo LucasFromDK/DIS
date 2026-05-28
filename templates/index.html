@@ -2,27 +2,59 @@
 <html lang="en">
 
 <head>
-  <title>KU Student Shop</title>
-  <link rel="stylesheet" href="../public/style.css">
+  <title>KU Student Marketplace</title>
+  <link rel="stylesheet" href="../public/css/style.css">
+  <link rel="stylesheet" href="../public/css/backToTop.css">
+  <link rel="stylesheet" href="../public/css/darkmode.css">
   <!-- Favicon Coming Soon -->
-  <link rel="shortcut icon" type="image/ico" href="../public/favicon.ico">
+  <link rel="shortcut icon" type="image/ico" href="../public/css/favicon.ico">
 </head>
 
 <body>
   <div class="topnav">
-    <a class="active" href="/">Front</a>
+    <a class="active" href="/">Marketplace</a>
     <a class="topButton" href="/signup">Sign Up</a>
     <a class="topButton" href="/login">Login</a>
   </div>
 
+  <button id="theme-switch">
+    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
+      <path
+        d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Z">
+      </path>
+    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
+      <path
+        d="M480-280q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z">
+      </path>
+    </svg>
+  </button>
+  <script src="../public/scripts/darkmode.js"></script>
+
   <div align="center">
-    <h1>Welcome to the KU Student Shop!</h1>
-    {% if not person %}
-    <h1>Please sign in or create an account.</h1>
+    <script src="../public/scripts/events.js"></script>
+    <button id="backToTop">
+      <svg class="icon" height="16" stroke-linejoin="round" viewBox="0 0 16 16" width="16">
+        <path fill-rule="evenodd" clip-rule="evenodd"
+          d="M8.70711 1.39644C8.31659 1.00592 7.68342 1.00592 7.2929 1.39644L2.21968 6.46966L1.68935 6.99999L2.75001 8.06065L3.28034 7.53032L7.25001 3.56065V14.25V15H8.75001V14.25V3.56065L12.7197 7.53032L13.25 8.06065L14.3107 6.99999L13.7803 6.46966L8.70711 1.39644Z"
+          fill="currentColor"></path>
+      </svg>
+    </button>
+
+    <h1>Welcome to the KU Student Marketplace!</h1>
+    {% if signed_in == False %}
+    <h1><a href="/login">Login</a> or <a href="/signup">create an account</a> to use this platform.</h1>
     {% else %}
     <h1>Welcome back, {{ person }}!</h1>
     {% endif %}
   </div>
+
+  <div align="center">
+    {% if signed_in == True %}
+    <h2>Marketplace Listings</h2>
+    <!-- Listings would go here -->
+  </div>
+  {% endif %}
 </body>
 
 </html>

@@ -1,0 +1,71 @@
+.darkmode {
+    /* Body Color */
+    --base-color: black;
+  
+    /* Text Color */
+    --text-color: #ffffff;
+
+    /*backToTop*/
+    --arrow-color: #ECECEC;
+    --color-surface: #0b0b0b; /* Elevation 1 */
+    --color-surface-variant: #0b0b0b; /* Elevation 1 */
+    --color-surface-high: #191919; /* Elevation 2 */
+    --color-surface-high-hover: var(--color-surface-higher);
+    --color-surface-higher: #333333; /* Elevation 3 */
+    --color-surface-higher-hover: #484848; /* Elevation 3 */
+}
+
+.icon {
+    color: var(--arrow-color);
+}
+
+  #theme-switch {
+    height: 50px;
+    width: 50px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: var(--base-variant);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 3px;
+    right: 3px;
+    cursor: pointer;
+    z-index: 2;
+  }
+  
+  #theme-switch svg:last-child {
+    display: none;
+  }
+  
+  .darkmode #theme-switch svg:first-child {
+    display: none;
+  }
+  
+  .darkmode #theme-switch svg:last-child {
+    display: block;
+  }
+
+  #backToTop {
+  position: fixed;
+  bottom: 10px;
+  right: var(--sideDistance);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background-color: var(--color-surface-high);
+  color: var(--color-on-surface-high);
+  border: none;
+  border-radius: var(--rounded-sm);
+  padding: var(--space-xs);
+  cursor: pointer;
+  transition: var(--duration-hover) ease-out;
+  animation: fade-in var(--duration-200) ease-out forwards;
+  overflow: hidden;
+  z-index: 10;
+  box-shadow: var(--shadow-2);
+}
+/*End*/
