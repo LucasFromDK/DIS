@@ -1,8 +1,5 @@
-import ctypes
 import os
 from flask import Flask, render_template, request
-
-ctypes.windll.kernel32.SetConsoleTitleW(f"DIS Web App Project")
 
 app = Flask(__name__, static_folder="public", static_url_path="/public")
 
