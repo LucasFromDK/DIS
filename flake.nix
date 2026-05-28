@@ -14,5 +14,15 @@
         ];
       };
     });
+
+    # TODO: package our repo as a python package and add to docker image
+    packages = forEachSystem (pkgs: rec {
+      docker-image = pkgs.dockerTools.buildLayeredImage {
+        name = "ku-dis-flask-project";
+        tags = ["latest"];
+        contents = [];
+      };
+    });
+
   };
 }
