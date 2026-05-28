@@ -45,7 +45,7 @@
     {% if signed_in == False %}
     <h1><a href="/login">Login</a> or <a href="/signup">create an account</a> to use this platform.</h1>
     {% else %}
-    <h1>Welcome back, {{ person }}!</h1>
+    <h1>Welcome back, {{ person.name }}!</h1>
     {% endif %}
   </div>
 
