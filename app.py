@@ -110,13 +110,12 @@ def signup_post():
         return render_template("signup.html",
                                signed_in = is_logged_in(request.cookies),
                                person = get_logged_in(request.cookies),
-                               invalid_email = True)
+                               error = "Please enter a valid KU Student email address.")
 
-    # If Passwords do not match, set p tag with id "PasswordMismatch" to "Passwords do not match" in DOM
     if password != repeat_password:
         return render_template("signup.html",
                                signed_in = is_logged_in(request.cookies),
                                person = get_logged_in(request.cookies),
-                               password_mismatch = True)
+                               error = "Passwords do not match!")
 
     return "TODO"

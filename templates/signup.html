@@ -36,10 +36,8 @@
             <input name="Email" type="Email" placeholder="Email" />
             <input name="Password" type="Password" placeholder="Password" />
             <input name="Password2" type="Password" placeholder="Repeat Password" />
-            {% if password_mismatch == True %}
-            <p class="WrongInput">Passwords do not match!</p>
-            {% elif invalid_email == True %}
-            <p class="WrongInput">Please enter a valid KU Student email address.</p>
+            {% if error != null %}
+            <p class="WrongInput">{{ error }}</p>
             {% else %}
             <br>
             {% endif %}
