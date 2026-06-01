@@ -1,3 +1,4 @@
 # Cache file(s)
 __pycache__/
 .direnv/
+app.db

@@ -4,6 +4,9 @@ import re
 from uuid import UUID, uuid4
 from flask import Flask, make_response, redirect, render_template, request
 from werkzeug.datastructures import ImmutableMultiDict
+from database import Database
+
+database = Database()
 
 # Get public directory path
 public_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "public")
