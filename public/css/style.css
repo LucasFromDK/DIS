@@ -7,7 +7,7 @@
 
   /* Theme Switch */
   --base-variant: #e8e9ed;
-  
+
   /* backToTop button */
   --sideDistance: 10px;
   /* Colors */
@@ -55,7 +55,6 @@ h1, h2, h3, h4, h5, h6, p, a {
   align-items: center;
   justify-content: center;
   min-height: 6vh;
-  position: relative; /* Important for positioning the glow */
   border-bottom: solid #7E0000;
   z-index: 1;
 }
@@ -82,7 +81,8 @@ h1, h2, h3, h4, h5, h6, p, a {
 /* Top Button */
 .topButton {
   margin: 2px;
-  min-width: 170px; /* Fixes width issue on smaller displays | Should be black when not selected */
+  /* Fixes width issue on smaller displays | Should be black when not selected */
+  min-width: 170px;
   cursor: pointer;
   border: none;
   color: white;
@@ -96,3 +96,10 @@ h1, h2, h3, h4, h5, h6, p, a {
   color: white;
 }
 /* Top Button End */
+
+.WrongInput {
+  color: var(--text-color);
+  font-size: 16px;
+  padding: 0;
+  margin: 0;
+}

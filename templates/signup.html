@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="../public/css/style.css">
     <link rel="stylesheet" href="../public/css/darkmode.css">
     <!-- Favicon Coming Soon -->
-    <link rel="shortcut icon" type="image/ico" href="../public/css/favicon.ico">
+    <link rel="shortcut icon" type="image/ico" href="../public/favicon.ico">
 </head>
 
 <body>
@@ -33,10 +33,17 @@
     <div align="center">
         <h1>Create an Account</h1>
         <form method="post" style="display: flex; flex-direction: column; max-width: 400px;">
-          <input name="username" type="email" placeholder="email"/>
-          <input name="password" type="password" placeholder="password"/>
-          <input name="password2" type="password" placeholder="repeat password"/>
-          <input type="submit" value="Sign up"/>
+            <input name="Email" type="Email" placeholder="Email" />
+            <input name="Password" type="Password" placeholder="Password" />
+            <input name="Password2" type="Password" placeholder="Repeat Password" />
+            {% if password_mismatch == True %}
+            <p class="WrongInput">Passwords do not match!</p>
+            {% elif invalid_email == True %}
+            <p class="WrongInput">Please enter a valid KU Student email address.</p>
+            {% else %}
+            <br>
+            {% endif %}
+            <input type="submit" value="Sign up" />
         </form>
     </div>
 </body>

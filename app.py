@@ -1,5 +1,6 @@
 import time
 import os
+import re
 from uuid import UUID, uuid4
 from flask import Flask, make_response, redirect, render_template, request
 from werkzeug.datastructures import ImmutableMultiDict
@@ -55,20 +56,20 @@ def is_logged_in(cookies: ImmutableMultiDict[str,str]) -> bool:
 
 @app.route("/")
 def index():
-    return render_template("index.html", 
-                           signed_in = is_logged_in(request.cookies), 
+    return render_template("index.html",
+                           signed_in = is_logged_in(request.cookies),
                            person = get_logged_in(request.cookies))
 
 @app.route("/login")
 def login():
-    return render_template("login.html", 
-                           signed_in = is_logged_in(request.cookies), 
+    return render_template("login.html",
+                           signed_in = is_logged_in(request.cookies),
                            person = get_logged_in(request.cookies))
 
 @app.route("/signup")
 def signup():
-    return render_template("signup.html", 
-                           signed_in = is_logged_in(request.cookies), 
+    return render_template("signup.html",
+                           signed_in = is_logged_in(request.cookies),
                            person = get_logged_in(request.cookies))
 
 @app.route("/debug-test-session-token")
@@ -97,9 +98,25 @@ def logout():
 
 @app.post("/signup")
 def signup_post():
-    email = request.form
-    password = request.form["password"]
-    repeat_password = request.form["password2"]
+    email = request.form["Email"]
+    password = request.form["Password"]
+    repeat_password = request.form["Password2"]
 
+    # Check email against a RegEx to ensure it's a KU Address
+    # Check if email is either in the format of 3 letters followed by 3 numbers and then @alumni.ku.dk, or any email that ends with @di.ku.dk
+    regex = r"^(?:[A-Za-z]{3}[0-9]{3}@alumni\.ku\.dk|.+@di\.ku\.dk)$"
+
+    if not re.match(regex, email):
+        return render_template("signup.html",
+                               signed_in = is_logged_in(request.cookies),
+                               person = get_logged_in(request.cookies),
+                               invalid_email = True)
+
+    # If Passwords do not match, set p tag with id "PasswordMismatch" to "Passwords do not match" in DOM
+    if password != repeat_password:
+        return render_template("signup.html",
+                               signed_in = is_logged_in(request.cookies),
+                               person = get_logged_in(request.cookies),
+                               password_mismatch = True)
 
     return "TODO"

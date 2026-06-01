@@ -1,0 +1,10 @@
+{
+    "[Python]": {
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": true
+    },
+    "[HTML]": {
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": true
+    },
+}
