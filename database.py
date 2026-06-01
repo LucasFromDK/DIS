@@ -8,8 +8,8 @@ class Database:
     def __init__(self):
         self.connection = init_database()
 
-    def query(self, query: str) -> sqlite3.Cursor:
-        return self.connection.cursor().execute(query)
+    def query(self, query: str, parameters = ()) -> sqlite3.Cursor:
+        return self.connection.cursor().execute(query, parameters)
 
     def commit(self):
         self.connection.commit()

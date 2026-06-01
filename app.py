@@ -124,7 +124,7 @@ def signup_post():
                                error = "Passwords do not match!")
 
     try:
-        cursor = database.query(f"INSERT INTO users (username, email, password) VALUES ('{username}', '{email}', '{password}')")
+        cursor = database.query(f"INSERT INTO users (username, email, password) VALUES (?, ?, ?)", (username, email, password))
         database.commit()
 
         response = redirect("/")
