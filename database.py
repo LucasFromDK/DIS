@@ -11,6 +11,9 @@ class Database:
     def query(self, query: str) -> sqlite3.Cursor:
         return self.connection.cursor().execute(query)
 
+    def commit(self):
+        self.connection.commit()
+
 def init_database() -> sqlite3.Connection:
     if Path(DATABASE_PATH).exists():
         connection = sqlite3.connect(DATABASE_PATH, check_same_thread=False)
@@ -28,4 +31,3 @@ def init_database() -> sqlite3.Connection:
 
 def fill_database_with_mock_data():
     raise NotImplemented()
-

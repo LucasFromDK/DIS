@@ -33,11 +33,12 @@
     <div align="center">
         <h1>Create an Account</h1>
         <form method="post" style="display: flex; flex-direction: column; max-width: 400px;">
-            <input name="Email" type="Email" placeholder="Email" />
-            <input name="Password" type="Password" placeholder="Password" />
-            <input name="Password2" type="Password" placeholder="Repeat Password" />
-            {% if error != null %}
-            <p class="WrongInput">{{ error }}</p>
+            <input name="username" type="Username" placeholder="Username" />
+            <input name="email" type="Email" placeholder="Email" />
+            <input name="password" type="Password" placeholder="Password" />
+            <input name="password2" type="Password" placeholder="Repeat Password" />
+            {% if error != None %}
+            <p class="WrongInput">{{error}}</p>
             {% else %}
             <br>
             {% endif %}

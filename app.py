@@ -1,3 +1,4 @@
+import sqlite3
 import time
 import os
 import re
@@ -101,9 +102,10 @@ def logout():
 
 @app.post("/signup")
 def signup_post():
-    email = request.form["Email"]
-    password = request.form["Password"]
-    repeat_password = request.form["Password2"]
+    username = request.form["username"]
+    email = request.form["email"]
+    password = request.form["password"]
+    repeat_password = request.form["password2"]
 
     # Check email against a RegEx to ensure it's a KU Address
     # Check if email is either in the format of 3 letters followed by 3 numbers and then @alumni.ku.dk, or any email that ends with @di.ku.dk
@@ -121,4 +123,19 @@ def signup_post():
                                person = get_logged_in(request.cookies),
                                error = "Passwords do not match!")
 
-    return "TODO"
+    try:
+        cursor = database.query(f"INSERT INTO users (username, email, password) VALUES ('{username}', '{email}', '{password}')")
+        database.commit()
+
+        response = redirect("/")
+        return response
+    except sqlite3.IntegrityError as e:
+        error = e.args[0]
+        if "username" in error:
+            error = "Username already taken"
+        elif "email" in error:
+            error = "Email already in use"
+        return render_template("signup.html",
+                               signed_in = is_logged_in(request.cookies),
+                               person = get_logged_in(request.cookies),
+                               error = f"error creating user: {error}")
