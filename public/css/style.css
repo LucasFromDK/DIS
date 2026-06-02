@@ -11,32 +11,33 @@
   /* backToTop button */
   --sideDistance: 10px;
   /* Colors */
-    --arrow-color: #2B2B2B;
-    --color-surface: #fff;
-    --color-surface-variant: #e6e6e6;
-    --color-surface-high: #f5f5f5;
-    --color-surface-higher: #e3e3e3;
-    --color-surface-higher-hover: #cfcfcf;
-    --color-surface-high-hover: var(--color-surface-higher);
+  --arrow-color: #2B2B2B;
+  --color-surface: #fff;
+  --color-surface-variant: #e6e6e6;
+  --color-surface-high: #f5f5f5;
+  --color-surface-higher: #e3e3e3;
+  --color-surface-higher-hover: #cfcfcf;
+  --color-surface-high-hover: var(--color-surface-higher);
 
-      /* Anim */
-    --duration-multiplier: 1; /* Allow disabling or increase animation speed */
-    --duration-75: calc(75ms * var(--duration-multiplier));
-    --duration-100: calc(100ms * var(--duration-multiplier));
-    --duration-150: calc(150ms * var(--duration-multiplier));
-    --duration-200: calc(200ms * var(--duration-multiplier));
-    --duration-300: calc(300ms * var(--duration-multiplier));
-    --duration-400: calc(400ms * var(--duration-multiplier));
-    --duration-500: calc(500ms * var(--duration-multiplier));
-    --duration-600: calc(600ms * var(--duration-multiplier));
-    --duration-700: calc(700ms * var(--duration-multiplier));
-    --duration-800: calc(800ms * var(--duration-multiplier));
-    --duration-900: calc(900ms * var(--duration-multiplier));
-    --duration-1000: calc(1000ms * var(--duration-multiplier));
-    --duration-1200: calc(1200ms * var(--duration-multiplier));
-    --duration-1400: calc(1400ms * var(--duration-multiplier));
-    --duration-2000: calc(2000ms * var(--duration-multiplier));
-    --duration-hover: var(--duration-200);
+  /* Anim */
+  --duration-multiplier: 1;
+  /* Allow disabling or increase animation speed */
+  --duration-75: calc(75ms * var(--duration-multiplier));
+  --duration-100: calc(100ms * var(--duration-multiplier));
+  --duration-150: calc(150ms * var(--duration-multiplier));
+  --duration-200: calc(200ms * var(--duration-multiplier));
+  --duration-300: calc(300ms * var(--duration-multiplier));
+  --duration-400: calc(400ms * var(--duration-multiplier));
+  --duration-500: calc(500ms * var(--duration-multiplier));
+  --duration-600: calc(600ms * var(--duration-multiplier));
+  --duration-700: calc(700ms * var(--duration-multiplier));
+  --duration-800: calc(800ms * var(--duration-multiplier));
+  --duration-900: calc(900ms * var(--duration-multiplier));
+  --duration-1000: calc(1000ms * var(--duration-multiplier));
+  --duration-1200: calc(1200ms * var(--duration-multiplier));
+  --duration-1400: calc(1400ms * var(--duration-multiplier));
+  --duration-2000: calc(2000ms * var(--duration-multiplier));
+  --duration-hover: var(--duration-200);
 }
 
 body {
@@ -45,7 +46,14 @@ body {
 }
 
 /* Text Colors */
-h1, h2, h3, h4, h5, h6, p, a {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a {
   color: var(--text-color);
 }
 
@@ -95,6 +103,7 @@ h1, h2, h3, h4, h5, h6, p, a {
   background-position: left;
   color: white;
 }
+
 /* Top Button End */
 
 .WrongInput {
@@ -111,6 +120,37 @@ h1, h2, h3, h4, h5, h6, p, a {
   justify-content: center;
   padding: 16px;
   max-width: 80%;
+  position: relative;
+}
+
+.listing-container.loading {
+  height: 50vh;
+}
+
+.listing-container.loading::before {
+  content: "";
+  position: absolute;
+  top: calc(50% - 7.5vw);
+  /* extend so tilt covers area */
+  left: calc(50% - 7.5vw);
+  /* start off-screen */
+  width: 15vw;
+  /* strip width (as % of container) */
+  height: 15vw;
+
+  animation: rotate 0.8s ease infinite;
+
+  background-image: url("/public/favicon.ico");
+  background-size: contain;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg)
+  }
+  100% {
+    transform: rotate(360deg)
+  }
 }
 
 .listing {
