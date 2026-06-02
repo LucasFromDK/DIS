@@ -68,13 +68,39 @@ def index():
 def login():
     return render_template("login.html",
                            signed_in = is_logged_in(request.cookies),
-                           person = get_logged_in(request.cookies))
+                           person = get_logged_in(request.cookies),
+                           error = None)
+
+@app.post("/login")
+def login_post():
+    username = request.form["username"]
+    password = request.form["password"]
+
+    cursor = database.query(f"SELECT id, username, email FROM users WHERE (username=? OR email=?) AND password=?", (username, username, password))
+    user_data = cursor.fetchone()
+
+    if user_data is None:
+        return render_template("login.html",
+                               signed_in = is_logged_in(request.cookies),
+                               person = get_logged_in(request.cookies),
+                               error = "Invalid username/email or password")
+
+    user = User(user_data[0], user_data[1], user_data[2])
+    session = Session(time.time() + 3600.0, user)
+    sessions[session.token] = session
+
+    response = redirect("/")
+    response.set_cookie("session_token", session.token.hex, max_age=3600)
+
+    return response
 
 @app.route("/signup")
 def signup():
     return render_template("signup.html",
                            signed_in = is_logged_in(request.cookies),
-                           person = get_logged_in(request.cookies))
+                           person = get_logged_in(request.cookies),
+                           error = None)
+
 
 @app.route("/debug-test-session-token")
 def test_sesh():

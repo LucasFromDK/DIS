@@ -32,7 +32,16 @@
 
     <div align="center">
         <h1>Login to Account</h1>
-        <!-- Login form would go here -->
+        <form method="post" style="display: flex; flex-direction: column; max-width: 400px;">
+            <input name="username" type="Username" placeholder="Username or Email" />
+            <input name="password" type="Password" placeholder="Password" />
+            {% if error != None %}
+            <p class="WrongInput">{{error}}</p>
+            {% else %}
+            <br>
+            {% endif %}
+            <input type="submit" value="Login" />
+        </form>
     </div>
 </body>
 
