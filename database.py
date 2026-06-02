@@ -1,12 +1,29 @@
 import os
 from pathlib import Path
 import sqlite3
+import random
 
 DATABASE_PATH = "app.db"
 
 class Database:
     def __init__(self):
-        self.connection = init_database()
+        if not Path(DATABASE_PATH).exists():
+            connection = sqlite3.connect(DATABASE_PATH, check_same_thread=False)
+            print("New database. Applying db-init/*.sql")
+            connection = sqlite3.connect(DATABASE_PATH, check_same_thread=False)
+            cur = connection.cursor()
+            sql_scripts = os.listdir("db-init")
+            sql_scripts.sort()
+            for path in sql_scripts:
+                with open(f"db-init/{path}", "r") as file:
+                    print(f"Applying {path}...")
+                    _ = cur.executescript(file.read())
+            connection.commit()
+            self.connection = connection
+            self.fill_with_fake_data()
+        else:
+            self.connection = sqlite3.connect(DATABASE_PATH, check_same_thread=False)
+
 
     def query(self, query: str, parameters = ()) -> sqlite3.Cursor:
         return self.connection.cursor().execute(query, parameters)
@@ -14,20 +31,43 @@ class Database:
     def commit(self):
         self.connection.commit()
 
-def init_database() -> sqlite3.Connection:
-    if Path(DATABASE_PATH).exists():
-        connection = sqlite3.connect(DATABASE_PATH, check_same_thread=False)
-        return connection
+    def fill_with_fake_data(self):
+        _fill_with_fake_users(self)
 
-    print("New database. Applying db-init/*.sql")
-    connection = sqlite3.connect(DATABASE_PATH, check_same_thread=False)
-    cur = connection.cursor()
-    for path in os.listdir("db-init"):
-        with open(f"db-init/{path}", "r") as file:
-            print(f"Applying {path}...")
-            _ = cur.execute(file.read())
-    connection.commit()
-    return connection
 
-def fill_database_with_mock_data():
+def _fill_with_fake_users(database: Database):
+    first_names = [
+        "John",
+        "Jill",
+        "Jack",
+        "Andrea",
+        "Will",
+        "Simon",
+        "Gwen",
+        "Phillip",
+        "Firstname",
+        "Water",
+    ]
+    last_names = [
+        "Hancock",
+        "Hugh Mann",
+        "Reel Per Sun",
+        "Nut Bott",
+        "J. Fry",
+        "Doe",
+        "Witherspoon",
+        "Lastname",
+        "Bottle",
+    ]
+    for _ in range(50):
+        try:
+            name = random.choice(first_names)
+            username = name + " " + random.choice(last_names)
+            email = f"{name.lower()}{random.randint(111,999)}@di.ku.dk"
+            database.query("INSERT INTO users (username, email, password) VALUES (?,?,?)", (username, email, "1234"))
+        except:
+            pass
+    database.commit()
+
+def _fill_with_fake_products(database: Database):
     raise NotImplemented()

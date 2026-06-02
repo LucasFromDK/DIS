@@ -5,6 +5,7 @@ import re
 from uuid import UUID, uuid4
 from flask import Flask, make_response, redirect, render_template, request
 from werkzeug.datastructures import ImmutableMultiDict
+from werkzeug.wrappers import response
 from database import Database
 
 database = Database()
@@ -63,6 +64,13 @@ def index():
     return render_template("index.html",
                            signed_in = is_logged_in(request.cookies),
                            person = get_logged_in(request.cookies))
+
+@app.route("/api/products")
+def get_products():
+    if not is_logged_in(request.cookies):
+        return "Invalid session token", 503
+    cursor = database.query("SELECT * FROM products;")
+    return cursor.fetchall()
 
 @app.route("/login")
 def login():
