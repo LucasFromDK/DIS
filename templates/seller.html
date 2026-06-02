@@ -2,17 +2,18 @@
 <html lang="en">
 
 <head>
-    <title>KU Student Marketplace | Sign Up</title>
+    <title>KU Student Marketplace | Become Seller</title>
     <link rel="stylesheet" href="../public/css/style.css">
     <link rel="stylesheet" href="../public/css/darkmode.css">
+    <!-- Favicon Coming Soon -->
     <link rel="shortcut icon" type="image/ico" href="../public/favicon.ico">
 </head>
 
 <body>
     <div class="topnav">
         <a class="topButton" href="/">Marketplace</a>
-        <a class="active" href="/signup">Sign Up</a>
-        <a class="topButton" href="/login">Login</a>
+        <a class="active" href="/seller">Become Seller</a>
+        <a class="topButton" href="/logout">Logout</a>
     </div>
 
     <button id="theme-switch">
@@ -30,18 +31,15 @@
     <script src="../public/scripts/darkmode.js"></script>
 
     <div align="center">
-        <h1>Create an Account</h1>
+        <h1>Become a Seller</h1>
+        <p>Fill out the form below to become a seller on the KU Student Marketplace. TODO</p>
         <form method="post" style="display: flex; flex-direction: column; max-width: 400px;">
-            <input name="username" type="Username" placeholder="Username" />
-            <input name="email" type="Email" placeholder="Email" />
-            <input name="password" type="Password" placeholder="Password" />
-            <input name="password2" type="Password" placeholder="Repeat Password" />
             {% if error != None %}
             <p class="WrongInput">{{error}}</p>
             {% else %}
             <br>
             {% endif %}
-            <input type="submit" value="Sign Up" />
+            <input type="submit" value="Register" />
         </form>
     </div>
 </body>

@@ -1,6 +1,5 @@
-INSERT INTO sellers (userid) VALUES (1),(2),(3),(4);
+INSERT INTO sellers (userid) VALUES (1),(2),(3);
 INSERT INTO products (sellerid, name, description, price, units) VALUES
-(1, "rusty spoon", "very shartp and rusty", 5995, 8),
-(2, "Excalibur", "rock sold seperately", 999999999999, 0),
-(3, "Faxe Kondi Free", "Sukkerfri sodavand", 4895, 1000),
-(4, "haerte", "orgna", 51925300, 2)
+(1, "Old Wooden Chair", "Has a few splinters but otherwise sturdy", 5995, 4),
+(2, "Excalibur Replica", "Rock sold seperately!", 1000000, 0),
+(3, "Faxe Kondi Free", "Sukkerfri sodavand", 1995, 1000)
