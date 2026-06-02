@@ -9,7 +9,6 @@ DATABASE_PATH = "app.db"
 class Database:
     def __init__(self):
         if not Path(DATABASE_PATH).exists():
-            connection = sqlite3.connect(DATABASE_PATH, check_same_thread=False)
             print("New database. Applying db-init/*.sql")
             connection = sqlite3.connect(DATABASE_PATH, check_same_thread=False)
             cur = connection.cursor()
