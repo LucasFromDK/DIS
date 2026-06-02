@@ -55,17 +55,11 @@
 
   <div align="center">
     {% if signed_in == True %}
+    <script src="../public/scripts/pullListings.js"></script>
     <h2>Marketplace Listings</h2>
-    <!-- Listings would go here -->
+    <button onclick="fetchProducts()">Refresh Listings</button>
+    <!-- Listings Go Here Automatically -->
     <div class="listing-container">
-      {% for product in products %}
-      <div class="listing">
-        <h3>{{ product.name }}</h3>
-        <p>{{ product.description }}</p>
-        <p>Price: ${{ product.price }}</p>
-        <p>Seller: {{ product.seller }}</p>
-      </div>
-      {% endfor %}
     </div>
   </div>
   {% endif %}

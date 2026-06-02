@@ -3,7 +3,7 @@ import time
 import os
 import re
 from uuid import UUID, uuid4
-from flask import Flask, make_response, redirect, render_template, request
+from flask import Flask, make_response, redirect, render_template, request, jsonify
 from werkzeug.datastructures import ImmutableMultiDict
 from werkzeug.wrappers import response
 from database import Database
@@ -61,6 +61,10 @@ def is_logged_in(cookies: ImmutableMultiDict[str,str]) -> bool:
 
 @app.route("/")
 def index():
+    # Check if Flask is in debug mode, if so, automatically log in with a test user
+    if app.debug and not is_logged_in(request.cookies):
+        return redirect("/debug-test-session-token")
+
     return render_template("index.html",
                            signed_in = is_logged_in(request.cookies),
                            person = get_logged_in(request.cookies))
@@ -69,8 +73,14 @@ def index():
 def get_products():
     if not is_logged_in(request.cookies):
         return "Invalid session token", 503
-    cursor = database.query("SELECT * FROM products;")
-    return cursor.fetchall()
+    # Join products with sellers on sellerid to get the seller's name
+    cursor = database.query("""SELECT p.*, u.username as sellername
+                                FROM products AS p
+                                LEFT JOIN sellers AS s ON p.sellerid = s.id
+                                LEFT JOIN users   AS u ON s.userid   = u.id;""")
+    columns = [column[0] for column in cursor.description]
+    products = [dict(zip(columns, row)) for row in cursor.fetchall()]
+    return jsonify(products)
 
 @app.route("/login")
 def login():
