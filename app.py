@@ -61,26 +61,36 @@ def is_logged_in(cookies: ImmutableMultiDict[str,str]) -> bool:
 
 @app.route("/")
 def index():
-    # Check if Flask is in debug mode, if so, automatically log in with a test user
-    if app.debug and not is_logged_in(request.cookies):
-        return redirect("/debug-test-session-token")
-
     return render_template("index.html",
                            signed_in = is_logged_in(request.cookies),
                            person = get_logged_in(request.cookies))
+@app.before_request
+def log_in_debug():
+    # Check if Flask is in debug mode, if so, automatically log in with a test user
+    if app.debug and not is_logged_in(request.cookies) and not request.path == "/debug-test-session-token":
+        return redirect("/debug-test-session-token")
+
+@app.before_request
+def check_logged_in():
+    if request.path.startswith("/api") and not is_logged_in(request.cookies):
+        return "Unauthorized", 503
 
 @app.route("/api/products")
 def get_products():
-    if not is_logged_in(request.cookies):
-        return "Invalid session token", 503
     # Join products with sellers on sellerid to get the seller's name
-    cursor = database.query("""SELECT p.*, u.username as sellername
+    return database.query_json("""SELECT p.*, u.username as sellername
                                 FROM products AS p
                                 LEFT JOIN sellers AS s ON p.sellerid = s.id
                                 LEFT JOIN users   AS u ON s.userid   = u.id;""")
-    columns = [column[0] for column in cursor.description]
-    products = [dict(zip(columns, row)) for row in cursor.fetchall()]
-    return jsonify(products)
+
+
+@app.route("/api/sellers")
+def get_sellers():
+    # Join products with sellers on sellerid to get the seller's name
+    return database.query_json("""SELECT s.id, u.username
+                                     FROM sellers AS s
+                                     LEFT JOIN users AS u ON s.userid = u.id
+                                  """)
 
 @app.route("/login")
 def login():

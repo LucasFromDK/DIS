@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 import sqlite3
 import random
+from typing import Any
 
 DATABASE_PATH = "app.db"
 
@@ -27,6 +28,11 @@ class Database:
 
     def query(self, query: str, parameters = ()) -> sqlite3.Cursor:
         return self.connection.cursor().execute(query, parameters)
+
+    def query_json(self,query: str, parameters = ()) -> list[dict[str,Any]]:
+        cursor = self.query(query, parameters)
+        columns = [column[0] for column in cursor.description]
+        return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
     def commit(self):
         self.connection.commit()
