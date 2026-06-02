@@ -58,6 +58,15 @@ def get_logged_in(cookies: ImmutableMultiDict[str,str]) -> User | None:
 def is_logged_in(cookies: ImmutableMultiDict[str,str]) -> bool:
     return not get_logged_in(cookies) is None
 
+
+def is_seller(cookies: ImmutableMultiDict[str,str]) -> bool:
+    user = get_logged_in(cookies)
+    if user is None: return False
+    cursor = database.query(f"SELECT 1 FROM sellers WHERE userid = ?", (user.id,))
+    found = cursor.fetchone()
+    if found is None: return False
+    return True
+
 @app.route("/")
 def index():
     return render_template("index.html",
@@ -167,33 +176,50 @@ def signup_post():
                                person = get_logged_in(request.cookies),
                                error = f"error creating user: {error}")
 
-# TODO: Implement seller registration functionality
 @app.route("/seller")
 def seller():
     if not is_logged_in(request.cookies):
         return redirect("/login")
 
+    if is_seller(request.cookies):
+        return redirect("/create-listing")
+
     return render_template("seller.html",
                            signed_in = is_logged_in(request.cookies),
                            person = get_logged_in(request.cookies))
+
+
+@app.route("/seller", methods=["POST"])
+def becum_seller():
+    user = get_logged_in(request.cookies)
+    if user is None:
+        return redirect("/login")
+
+    if is_seller(request.cookies):
+        return redirect("/create-listing")
+
+    _ = database.query("INSERT INTO sellers (userid) VALUES (?)", (user.id,))
+    database.commit()
+
+    return redirect("/seller")
 
 @app.route("/create-listing")
 def create_listing():
     if not is_logged_in(request.cookies):
         return redirect("/login")
 
-    # Add Seller Check Here once that functionality is implemented
     if not is_seller(request.cookies):
         return redirect("/seller")
 
-    return render_template("create_listing.html",
+    return render_template("create-listing.html",
                            signed_in = is_logged_in(request.cookies),
                            person = get_logged_in(request.cookies))
 
 # TODO: Implement create listing functionality, including database insertion and form validation
 @app.post("/create-listing")
 def create_listing_post():
-    if not is_logged_in(request.cookies):
+    user = get_logged_in(request.cookies)
+    if user is None:
         return redirect("/login")
 
     if not is_seller(request.cookies):
@@ -203,69 +229,60 @@ def create_listing_post():
     product_description = request.form["product_description"]
     product_price = float(request.form["product_price"])
     amount_available = int(request.form["amount_available"])
+    error = None
 
     # Form Validation
     if len(product_name) == 0:
-        return render_template("create_listing.html",
-                               signed_in = is_logged_in(request.cookies),
-                               person = get_logged_in(request.cookies),
-                               error = "Product name cannot be empty")
-
+        error = "Product name cannot be empty"
     if len(product_description) == 0:
-        return render_template("create_listing.html",
-                               signed_in = is_logged_in(request.cookies),
-                               person = get_logged_in(request.cookies),
-                               error = "Product description cannot be empty")
-
+           error = "Product description cannot be empty"
     if product_price < 0:
-        return render_template("create_listing.html",
-                               signed_in = is_logged_in(request.cookies),
-                               person = get_logged_in(request.cookies),
-                               error = "Price cannot be negative")
-
+           error = "Price cannot be negative"
     if amount_available <= 0:
-        return render_template("create_listing.html",
+           error = "Amount available cannot be zero or negative"
+
+    if not error == None:
+        return render_template("create-listing.html",
                                signed_in = is_logged_in(request.cookies),
                                person = get_logged_in(request.cookies),
-                               error = "Amount available cannot be zero or negative")
+                               error = error)
 
     # Add logic to create the listing in the database here.
     # INSERT INTO sellers (userid) VALUES (1),(2),(3);
     # INSERT INTO products (sellerid, name, description, price, units)
     try:
-        cursor = database.query(f"SELECT id FROM sellers WHERE userid=?", (get_logged_in(request.cookies).id,))
-        seller_data = cursor.fetchone()
+        cursor = database.query(f"SELECT id FROM sellers WHERE userid = ?", (user.id,))
+        seller_id, = cursor.fetchone()
 
         # This should never happen but a final safety check to ensure the user is actually a seller before allowing them to create a listing.
-        if seller_data is None:
-            return render_template("create_listing.html",
+        if seller_id is None:
+            return render_template("create-listing.html",
                                 signed_in = is_logged_in(request.cookies),
                                 person = get_logged_in(request.cookies),
                                 error = "Seller not found. Please register as a seller before creating a listing.")
 
         # Add the listing to the database
         cursor = database.query(f"INSERT INTO products (sellerid, name, description, price, units) VALUES (?, ?, ?, ?, ?)",
-                                (seller_data[0], product_name, product_description, int(product_price * 100), amount_available))
+                                (seller_id, product_name, product_description, int(product_price * 100), amount_available))
 
         database.commit()
         return redirect("/")  # Redirect to the marketplace page. Post should be visible immediately.
-    # TODO: Error handling and messages for database insertion failures.
-    except sqlite3.IntegrityError as e:
-            error = e.args[0]
-            if "PLACEHOLDER" in error:
-                error = "ERROR"
-            elif "PLACEHOLDER2" in error:
-                error = "ERROR2"
+    except (sqlite3.IntegrityError, OverflowError) as e:
+            if error is OverflowError:
+                error = "One of your numbers is too large."
+            else:
+                error = e.args[0]
             return render_template("create-listing.html",
                                 signed_in = is_logged_in(request.cookies),
                                 person = get_logged_in(request.cookies),
-                                error = f"Error3: {error}")
+                                error = f"Error: {error}")
 
 @app.route("/debug-test-session-token")
 def test_sesh():
     global sessions
     response = redirect("/")
-    test_user = User(0, "[Test Account]", "test@ku.dk")
+    id,name,email = database.query("SELECT id,username,email FROM users WHERE id = 1").fetchone()
+    test_user = User(id,name,email)
     session = Session(time.time() + 1000.0, test_user)
     sessions[session.token] = session
     response.set_cookie("session_token", session.token.hex, max_age=1000)
