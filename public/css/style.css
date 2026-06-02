@@ -103,3 +103,20 @@ h1, h2, h3, h4, h5, h6, p, a {
   padding: 0;
   margin: 0;
 }
+
+.listing-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  padding: 16px;
+  max-width: 80%;
+}
+
+.listing {
+  border: 2px solid var(--text-color);
+  width: 300px;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}

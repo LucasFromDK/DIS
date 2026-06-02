@@ -17,3 +17,25 @@ To run the project use:
 ```bash
 flask run --debug
 ```
+
+### Provided Test Account(s)
+We provide the following test account(s) if unable to create your own login.
+
+<div>
+    <table style="text-align: center;">
+        <thead>
+            <tr>
+                <th style="width: 33%;">Email</th>
+                <th style="wdith: 33%;">Username</th>
+                <th style="width: 33%;">Password</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            <td>test@di.ku.dk</td>
+            <td>test</td>
+            <td>test1234</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
