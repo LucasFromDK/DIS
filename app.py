@@ -2,11 +2,9 @@ import sqlite3
 import time
 import os
 import re
-from tkinter import INSERT
 from uuid import UUID, uuid4
-from flask import Flask, make_response, redirect, render_template, request
+from flask import Flask,  redirect, render_template, request
 from werkzeug.datastructures import ImmutableMultiDict
-from werkzeug.wrappers import response
 from database import Database
 
 database = Database()
