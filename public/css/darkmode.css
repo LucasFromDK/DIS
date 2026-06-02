@@ -1,9 +1,9 @@
 .darkmode {
     /* Body Color */
-    --base-color: black;
+    --base-color: #222;
 
     /* Text Color */
-    --text-color: #ffffff;
+    --text-color: #eee;
 
     /*backToTop*/
     --arrow-color: #ECECEC;
