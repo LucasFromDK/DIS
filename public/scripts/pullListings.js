@@ -19,12 +19,15 @@ function displayProducts(products) {
     products.forEach(product => {
     const listing = document.createElement('div');
     listing.classList.add('listing');
+
     let price = new Intl.NumberFormat("da-DK", { style: "currency", currency: "DKK" }).format(
       product.price/100
     );
+
     let units = new Intl.NumberFormat("da-DK").format(
       product.units
     );
+
     listing.innerHTML = `<h3>${product.name}</h3>
                           <p>${product.description}</p>
                           <p>Price: ${price}</p>

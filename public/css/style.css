@@ -120,3 +120,21 @@ h1, h2, h3, h4, h5, h6, p, a {
   padding: 16px;
   margin-bottom: 16px;
 }
+
+.refreshButton {
+  padding: 5px;
+  cursor: pointer;
+  width: 200px;
+  height: fit-content;
+  border: solid #7E0000;
+  color: black;
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.refreshButton:hover {
+  background-position: left;
+  background-color: #eee;
+}
