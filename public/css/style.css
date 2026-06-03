@@ -57,6 +57,11 @@ a {
   color: var(--text-color);
 }
 
+input {
+  margin-top: 5px;
+  margin-bottom: 0px;
+}
+
 .topnav {
   background-color: black;
   display: flex;
@@ -161,28 +166,7 @@ a {
   margin-bottom: 16px;
 }
 
-.marketplaceButton {
-  display: grid;
-  padding: 5px;
-  margin-top: 10px;
-  width: 200px;
-  height: fit-content;
-  cursor: pointer;
-  border-radius: 10px;
-  border: solid #7E0000;
-  color: black;
-  background-color: #FFFFFF;
-  font-size: 1rem;
-  outline: none;
-  text-align: center;
-}
-
-.marketplaceButton:hover {
-  background-position: left;
-  background-color: #eee;
-}
-
-.deleteButton {
+.actionButton {
   display: grid;
   padding: 5px;
   margin-top: 10px;
@@ -195,5 +179,6 @@ a {
   background-color: #7E0000;
   font-size: 1rem;
   outline: none;
+  align-self: center;
   text-align: center;
 }

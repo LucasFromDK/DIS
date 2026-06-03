@@ -42,7 +42,7 @@ function displayProducts(container, products, signedInUserId) {
                           if (product.sellerid == signedInUserId) {
                             // Button to delete the listing
                             let deleteButton = document.createElement('button');
-                            deleteButton.classList.add('deleteButton');
+                            deleteButton.classList.add('actionButton');
                             deleteButton.innerText = 'Remove Listing';
                             deleteButton.addEventListener('click', async () => {
                               // Remove Listing Logic
