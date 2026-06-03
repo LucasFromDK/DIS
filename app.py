@@ -114,7 +114,7 @@ def delete_product(id: int):
     if user is None:
         raise Exception("Unreachable")
 
-    seller_id, user_id = database.query("""SELECT s.id, s.userid
+    user_id, = database.query("""SELECT s.userid
                                 FROM products AS p
                                 INNER JOIN sellers AS s ON p.sellerid = s.id
                                 AND p.id = ?;""", (id,)).fetchone()
