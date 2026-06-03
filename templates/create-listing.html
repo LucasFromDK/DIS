@@ -37,7 +37,7 @@
             <input name="product_description" type="ProductDescription" placeholder="Product Description" />
             <input name="product_price" type="ProductPrice" placeholder="Product Price (DKK)" />
             <input name="amount_available" type="AmountAvailable" placeholder="Amount" />
-            {% if error != None %}
+            {% if not error == None %}
             <p class="WrongInput">{{error}}</p>
             {% else %}
             <br>

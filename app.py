@@ -71,7 +71,8 @@ def is_seller(cookies: ImmutableMultiDict[str,str]) -> bool:
 def index():
     return render_template("index.html",
                            signed_in = is_logged_in(request.cookies),
-                           person = get_logged_in(request.cookies))
+                           person = get_logged_in(request.cookies),
+                           is_seller = is_seller(request.cookies))
 @app.before_request
 def log_in_debug():
     # Check if Flask is in debug mode, if so, automatically log in with a test user
@@ -98,6 +99,13 @@ def get_sellers():
                                      FROM sellers AS s
                                      LEFT JOIN users AS u ON s.userid = u.id
                                   """)
+
+@app.route("/api/logged_in_user")
+def get_logged_in_user():
+    user = get_logged_in(request.cookies)
+    if user is None:
+        return "Unauthorized", 503
+    return {"id": user.id, "name": user.name, "email": user.email}
 
 @app.route("/login")
 def login():
@@ -126,6 +134,7 @@ def login_post():
 
     response = redirect("/")
     response.set_cookie("session_token", session.token.hex, max_age=3600)
+    response.set_cookie("my_id", user.id, max_age=3600)
 
     return response
 
@@ -213,12 +222,15 @@ def create_listing():
 
     return render_template("create-listing.html",
                            signed_in = is_logged_in(request.cookies),
-                           person = get_logged_in(request.cookies))
+                           person = get_logged_in(request.cookies),
+                           error = None)
 
-# TODO: Implement create listing functionality, including database insertion and form validation
+# Logic for creating a listing.
 @app.post("/create-listing")
 def create_listing_post():
     user = get_logged_in(request.cookies)
+
+    # This should never be reached but just in case.
     if user is None:
         return redirect("/login")
 

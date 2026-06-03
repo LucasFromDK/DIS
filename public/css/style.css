@@ -162,19 +162,38 @@ a {
 }
 
 .marketplaceButton {
+  display: grid;
   padding: 5px;
-  cursor: pointer;
+  margin-top: 10px;
   width: 200px;
   height: fit-content;
+  cursor: pointer;
+  border-radius: 10px;
   border: solid #7E0000;
   color: black;
   background-color: #FFFFFF;
-  border-radius: 10px;
   font-size: 1rem;
   outline: none;
+  text-align: center;
 }
 
 .marketplaceButton:hover {
   background-position: left;
   background-color: #eee;
+}
+
+.deleteButton {
+  display: grid;
+  padding: 5px;
+  margin-top: 10px;
+  width: fit-content;
+  height: fit-content;
+  cursor: pointer;
+  border-radius: 10px;
+  border: solid #7E0000;
+  color: white;
+  background-color: #7E0000;
+  font-size: 1rem;
+  outline: none;
+  text-align: center;
 }
