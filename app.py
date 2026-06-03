@@ -92,12 +92,29 @@ def get_products():
                                 LEFT JOIN sellers AS s ON p.sellerid = s.id
                                 LEFT JOIN users   AS u ON s.userid   = u.id;""")
 
+@app.route("/api/products/delete(<int:id>)")
+def delete_product(id: int):
+    user = get_logged_in(request.cookies)
+
+    seller_id, user_id = database.query("""SELECT s.id, s.userid as sellername
+                                FROM products AS p
+                                LEFT JOIN sellers AS s ON p.sellerid = s.id
+                                AND p.id = ?;""", (id,)).fetchone()
+
+    if user_id == id:
+        database.query("DELETE FROM products WHERE id = ?", (id,))
+        database.commit()
+        return f"Deleted product with id {id}", 200
+
+    return "Not the seller of this product", 503
+
+
 @app.route("/api/sellers")
 def get_sellers():
     # Join products with sellers on sellerid to get the seller's name
     return database.query_json("""SELECT s.id, u.username
-                                     FROM sellers AS s
-                                     LEFT JOIN users AS u ON s.userid = u.id
+                                 FROM sellers AS s
+                                 LEFT JOIN users AS u ON s.userid = u.id
                                   """)
 
 @app.route("/api/logged_in_user")

@@ -5,15 +5,7 @@ import random
 from typing import Any
 import tempfile
 
-existing_db = False
-for file in os.listdir(tempfile.gettempdir()):
-    if "dis-flask-app" in file:
-        DATABASE_PATH = f"{tempfile.gettempdir()}/{file}/app.db"
-        existing_db = True
-        break
-if not existing_db:
-    # ignore, it can never be redefined
-    DATABASE_PATH = f"{tempfile.mkdtemp(suffix = "dis-flask-app")}/app.db"
+DATABASE_PATH = os.environ.get("DIS_DATABASE", "app.db")
 
 class Database:
     def __init__(self):
