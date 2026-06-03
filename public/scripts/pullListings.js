@@ -5,16 +5,24 @@ async function fetchProducts() {
     container.classList.add("loading")
     container.innerHTML = ''; // Clear existing listings
     const response = await fetch('/api/products');
+    let animFinished = false
+
     if (!response.ok) {
       container.innerText = await response.text();
       container.classList.remove("loading")
       throw new Error('Network response was not ok');
     }
+
     const products = await response.json();
     const signedInUserId = await getLoggedIn();
-    container.classList.remove("loading")
-    console.log(products)
-    displayProducts(container, products, signedInUserId);
+
+    // Show Loading animation for 1 second.
+    setTimeout(() => {
+      container.classList.remove("loading")
+      console.log(products)
+      displayProducts(container, products, signedInUserId);
+    }, 1000);
+
   } catch (error) {
     console.error('Error fetching products:', error);
   }
@@ -44,13 +52,33 @@ function displayProducts(container, products, signedInUserId) {
                             let deleteButton = document.createElement('button');
                             deleteButton.classList.add('actionButton');
                             deleteButton.innerText = 'Remove Listing';
+
                             deleteButton.addEventListener('click', async () => {
                               // Remove Listing Logic
                               let listingId = product.id;
                               console.log(`Deleting listing with id: ${listingId}`);
                             });
+
                             listing.appendChild(deleteButton);
-                          };
+                          } else if (product.units > 0) {
+                            // Button to buy the listing
+                            let buyButton = document.createElement('button');
+                            buyButton.classList.add('actionButton');
+                            buyButton.innerText = 'Buy Listing';
+
+                            buyButton.addEventListener('click', () => {
+                              // Buy Listing Logic
+                              let sellerId = product.sellerid;
+                              console.log(`Attempting to buy ${product.name} from seller: ${sellerId}`);
+                            });
+
+                            listing.appendChild(buyButton);
+                          } else {
+                            let soldOutText = document.createElement('button');
+                            soldOutText.classList.add('soldOutButton');
+                            soldOutText.innerText = 'Sold Out';
+                            listing.appendChild(soldOutText);
+                          }
     container.appendChild(listing);
   });
 }
