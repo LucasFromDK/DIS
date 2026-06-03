@@ -92,14 +92,34 @@ def get_products():
                                 LEFT JOIN sellers AS s ON p.sellerid = s.id
                                 LEFT JOIN users   AS u ON s.userid   = u.id;""")
 
+
+@app.route("/api/product(<int:id>)")
+def get_product_by_id(id):
+    # Join products with sellers on sellerid to get the seller's name
+    rows = database.query_json("""SELECT p.*, u.username as sellername
+                                FROM products AS p
+                                LEFT JOIN sellers AS s ON p.sellerid = s.id
+                                LEFT JOIN users   AS u ON s.userid   = u.id
+                                AND p.id = ?;""", (id,))
+    if len(rows) == 0:
+        return f"Product with id {id} not found", 404
+
+    return rows[0]
+
+
 @app.route("/api/products/delete(<int:id>)")
 def delete_product(id: int):
-    seller_id, user_id = database.query("""SELECT s.id, s.userid as sellername
+    user = get_logged_in(request.cookies)
+
+    if user is None:
+        raise Exception("Unreachable")
+
+    seller_id, user_id = database.query("""SELECT s.id, s.userid
                                 FROM products AS p
                                 LEFT JOIN sellers AS s ON p.sellerid = s.id
                                 AND p.id = ?;""", (id,)).fetchone()
 
-    if user_id == seller_id:
+    if user_id == user.id:
         database.query("DELETE FROM products WHERE id = ?", (id,))
         database.commit()
         return f"Deleted product with id {id}", 200
@@ -135,21 +155,21 @@ def login_post():
     password = request.form["password"]
 
     cursor = database.query(f"SELECT id, username, email FROM users WHERE (username=? OR email=?) AND password=?", (username, username, password))
-    user_data = cursor.fetchone()
+    id,username,email = cursor.fetchone()
 
-    if user_data is None:
+    if id is None:
         return render_template("login.html",
                                signed_in = is_logged_in(request.cookies),
                                person = get_logged_in(request.cookies),
                                error = "Invalid username/email or password")
 
-    user = User(user_data[0], user_data[1], user_data[2])
+    user = User(id,username,email)
     session = Session(time.time() + 3600.0, user)
     sessions[session.token] = session
 
     response = redirect("/")
     response.set_cookie("session_token", session.token.hex, max_age=3600)
-    response.set_cookie("my_id", user.id, max_age=3600)
+    response.set_cookie("my_id", str(user.id), max_age=3600)
 
     return response
 
@@ -267,7 +287,7 @@ def create_listing_post():
 
     product_name = request.form["product_name"]
     product_description = request.form["product_description"]
-    product_price = request.form["product_price"]
+    product_price = float(request.form["product_price"])
     amount_available = int(request.form["amount_available"])
     error = None
 
