@@ -15,10 +15,18 @@
 ## How to run
 To run the project use:
 ```bash
+flask run
+```
+
+To enter debug mode with AutoSignin enabled for test account use:
+```bash
 flask run --debug
 ```
 
-### Provided Test Account(s)
+## Notes
+The Web-App is NOT optimised in any way, shape or form for mobile devices, it's intended use is PC or Laptop only.
+
+## Provided Test Account(s)
 We provide the following test account(s) if unable to create your own login.
 
 <div>

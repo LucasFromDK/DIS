@@ -160,7 +160,7 @@ input {
 
 .listing {
   border: 2px solid var(--text-color);
-  width: 300px;
+  width: calc(1/3 * 80%);
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 16px;

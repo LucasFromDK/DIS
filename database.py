@@ -50,7 +50,6 @@ def _fill_with_fake_users(database: Database):
         "Simon",
         "Gwen",
         "Phillip",
-        "Firstname",
         "Water",
     ]
     last_names = [
@@ -61,7 +60,6 @@ def _fill_with_fake_users(database: Database):
         "J. Fry",
         "Doe",
         "Witherspoon",
-        "Lastname",
         "Bottle",
     ]
     for _ in range(50):

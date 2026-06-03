@@ -41,11 +41,20 @@ function displayProducts(container, products, signedInUserId) {
       product.units
     );
 
+    // Convert createdOn from Unix Timestamp to DD-MM HH:MM format.
+    let listingDate = new Date(product.createdOn * 1000).toLocaleString("en-UK", {
+      day: "2-digit",
+      month: "long",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+
     listing.innerHTML = `<h3>${product.name}</h3>
                           <p>${product.description}</p>
                           <p>Price: ${price}</p>
                           <p>Amount: ${units}</p>
-                          <p>Seller: ${product.sellername}</p>`
+                          <p>Seller: ${product.sellername}</p>
+                          <p>Listed: ${listingDate} </p>`
                           // Check if Seller is the logged in user, if so, add a delete button to the listing.
                           if (product.sellerid == signedInUserId) {
                             // Button to delete the listing
@@ -55,8 +64,7 @@ function displayProducts(container, products, signedInUserId) {
 
                             deleteButton.addEventListener('click', async () => {
                               // Remove Listing Logic
-                              let listingId = product.id;
-                              console.log(`Deleting listing with id: ${listingId}`);
+                              console.log(`Deleting listing with LID: ${product.id}`);
                             });
 
                             listing.appendChild(deleteButton);
@@ -69,7 +77,7 @@ function displayProducts(container, products, signedInUserId) {
                             buyButton.addEventListener('click', () => {
                               // Buy Listing Logic
                               let sellerId = product.sellerid;
-                              console.log(`Attempting to buy ${product.name} from seller: ${sellerId}`);
+                              console.log(`Attempting to buy ${product.name} from ${product.sellername} (SID: ${sellerId}  LID: ${product.id})`);
                             });
 
                             listing.appendChild(buyButton);
@@ -90,7 +98,6 @@ async function getLoggedIn() {
     throw new Error('Network response was not ok');
   }
   loggedInUser = await loggedInUser.json();
-  console.log(loggedInUser)
   return loggedInUser.id
 }
 

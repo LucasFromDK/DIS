@@ -9,11 +9,18 @@
 </head>
 
 <body>
-    <div class="topnav">
-        <a class="active" href="/">Marketplace</a>
-        <a class="topButton" href="/seller">Become Seller</a>
-        <a class="topButton" href="/logout">Logout</a>
-    </div>
+  <div class="topnav">
+    <a class="active" href="/">Marketplace</a>
+    {% if signed_in == False %}
+    <a class="topButton" href="/signup">Sign Up</a>
+    <a class="topButton" href="/login">Login</a>
+    {% elif is_seller == False %}
+    <a class="topButton" href="/seller">Become Seller</a>
+    <a class="topButton" href="/logout">Logout</a>
+    {% else %}
+    <a class="topButton" href="/logout">Logout</a>
+    {% endif %}
+  </div>
 
     <button id="theme-switch">
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
@@ -33,10 +40,31 @@
         <h1>Create Listing</h1>
         <p>Fill out the form below to create a new listing on the KU Student Marketplace.</p>
         <form method="post" style="display: flex; flex-direction: column; max-width: 400px;">
+            <!-- If product info is passed in set it in the inputs -->
+            {% if not product_name == None %}
+            <input name="product_name" type="ProductName" placeholder="Product Name" value="{{ product_name }}"/>
+            {% else %}
             <input name="product_name" type="ProductName" placeholder="Product Name" />
+            {% endif %}
+
+            {% if not product_description == None %}
+            <input name="product_description" type="ProductDescription" placeholder="Product Description" value="{{ product_description }}"/>
+            {% else %}
             <input name="product_description" type="ProductDescription" placeholder="Product Description" />
+            {% endif %}
+
+            {% if not product_price == None %}
+            <input name="product_price" type="ProductPrice" placeholder="Product Price (DKK)" value="{{ product_price }}"/>
+            {% else %}
             <input name="product_price" type="ProductPrice" placeholder="Product Price (DKK)" />
+            {% endif %}
+
+            {% if not amount_available == None %}
+            <input name="amount_available" type="AmountAvailable" placeholder="Amount" value="{{ amount_available }}"/>
+            {% else %}
             <input name="amount_available" type="AmountAvailable" placeholder="Amount" />
+            {% endif %}
+
             {% if not error == None %}
             <p class="WrongInput">{{error}}</p>
             {% else %}
