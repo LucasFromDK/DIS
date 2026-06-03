@@ -13,6 +13,12 @@
 - Bonus points for use of views, triggers, stored procedures, but not required
 
 ## How to run
+### Requirements
++ `python >= 3.14`
++ `flask >= 3.1.2`
+OR
++ `docker`
+---
 To run the project use:
 ```bash
 flask run
@@ -23,27 +29,36 @@ To enter debug mode with AutoSignin enabled for test account use:
 flask run --debug
 ```
 
+To run with docker use
+```sh
+docker load -i docker-image.tar.gz
+docker run --rm \
+    -p 5000:5000 \
+    -it ku-dis-flask-project \
+    dis-flask-project \
+    --debug \
+    --host 0.0.0.0
+```
+
+## Building docker image
+### Requirements
++ `nix`
+---
+run
+```bash
+nix --extra-experimental-features "flakes nix-command" build .
+```
+
 ## Notes
 The Web-App is NOT optimised in any way, shape or form for mobile devices, it's intended use is PC or Laptop only.
 
 ## Provided Test Account(s)
 We provide the following test account(s) if unable to create your own login.
 
-<div>
-    <table style="text-align: center;">
-        <thead>
-            <tr>
-                <th style="width: 33%;">Email</th>
-                <th style="wdith: 33%;">Username</th>
-                <th style="width: 33%;">Password</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-            <td>test@di.ku.dk</td>
-            <td>test</td>
-            <td>test1234</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+
+|Email|Username|Password|
+|-----|--------|--------|
+|test@di.ku.dk|test|test1234|
+
+
+when ran with `--debug` the website will always automatically log you in as this user
