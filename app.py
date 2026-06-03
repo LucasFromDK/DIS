@@ -71,7 +71,8 @@ def is_seller(cookies: ImmutableMultiDict[str,str]) -> bool:
 def index():
     return render_template("index.html",
                            signed_in = is_logged_in(request.cookies),
-                           person = get_logged_in(request.cookies))
+                           person = get_logged_in(request.cookies),
+                           is_seller = is_seller(request.cookies))
 @app.before_request
 def log_in_debug():
     # Check if Flask is in debug mode, if so, automatically log in with a test user
@@ -98,6 +99,13 @@ def get_sellers():
                                      FROM sellers AS s
                                      LEFT JOIN users AS u ON s.userid = u.id
                                   """)
+
+@app.route("/api/logged_in_user")
+def get_logged_in_user():
+    user = get_logged_in(request.cookies)
+    if user is None:
+        return "Unauthorized", 503
+    return {"id": user.id, "name": user.name, "email": user.email}
 
 @app.route("/login")
 def login():
@@ -126,6 +134,7 @@ def login_post():
 
     response = redirect("/")
     response.set_cookie("session_token", session.token.hex, max_age=3600)
+    response.set_cookie("my_id", user.id, max_age=3600)
 
     return response
 
@@ -205,20 +214,36 @@ def becum_seller():
 
 @app.route("/create-listing")
 def create_listing():
+    product_name = None
+    product_description = None
+    product_price = None
+    amount_available = None
+    error = None
+
+    # Should never be reached but just in case, if the user is not logged in, redirect to login page.
     if not is_logged_in(request.cookies):
         return redirect("/login")
 
+    # Should never be reached but just in case, if the user is not a seller, redirect to seller registration page.
     if not is_seller(request.cookies):
         return redirect("/seller")
 
+    # Else render the create listing page.
     return render_template("create-listing.html",
                            signed_in = is_logged_in(request.cookies),
-                           person = get_logged_in(request.cookies))
+                           person = get_logged_in(request.cookies),
+                           product_name = product_name,
+                           product_description = product_description,
+                           product_price = product_price,
+                           amount_available = amount_available,
+                           error = error)
 
-# TODO: Implement create listing functionality, including database insertion and form validation
+# Logic for creating a listing.
 @app.post("/create-listing")
 def create_listing_post():
     user = get_logged_in(request.cookies)
+
+    # This should never be reached but just in case.
     if user is None:
         return redirect("/login")
 
@@ -227,29 +252,39 @@ def create_listing_post():
 
     product_name = request.form["product_name"]
     product_description = request.form["product_description"]
-    product_price = float(request.form["product_price"])
+    product_price = request.form["product_price"]
     amount_available = int(request.form["amount_available"])
     error = None
 
+    # Convert e.g. 4,95 to 4.95 if user entered a comma instead of a dot for the price.
+    if "," in request.form["product_price"]:
+        try:
+            product_price = float(request.form["product_price"].replace(",", "."))
+        except ValueError:
+            error = "Invalid price format. Please enter a valid number for the price."
+    else:
+        product_price = float(request.form["product_price"])
+
     # Form Validation
     if len(product_name) == 0:
-        error = "Product name cannot be empty"
+        error = "Product name can't be empty"
     if len(product_description) == 0:
-           error = "Product description cannot be empty"
-    if product_price < 0:
-           error = "Price cannot be negative"
+           error = "Product description can't be empty"
+    if product_price < 0 or int(product_price * 100) < 0:
+           error = "Price can't be negative"
     if amount_available <= 0:
-           error = "Amount available cannot be zero or negative"
+           error = "Amount available can't be zero or negative"
 
     if not error == None:
+        # If there is an error, re-render the create listing page with the previously entered info and the error message.
         return render_template("create-listing.html",
                                signed_in = is_logged_in(request.cookies),
                                person = get_logged_in(request.cookies),
+                               product_name = product_name,
+                               product_description = product_description,
+                               product_price = product_price,
+                               amount_available = amount_available,
                                error = error)
-
-    # Add logic to create the listing in the database here.
-    # INSERT INTO sellers (userid) VALUES (1),(2),(3);
-    # INSERT INTO products (sellerid, name, description, price, units)
     try:
         cursor = database.query(f"SELECT id FROM sellers WHERE userid = ?", (user.id,))
         seller_id, = cursor.fetchone()
@@ -262,8 +297,8 @@ def create_listing_post():
                                 error = "Seller not found. Please register as a seller before creating a listing.")
 
         # Add the listing to the database
-        cursor = database.query(f"INSERT INTO products (sellerid, name, description, price, units) VALUES (?, ?, ?, ?, ?)",
-                                (seller_id, product_name, product_description, int(product_price * 100), amount_available))
+        cursor = database.query(f"INSERT INTO products (sellerid, name, description, price, units, createdOn) VALUES (?, ?, ?, ?, ?, ?)",
+                                (seller_id, product_name, product_description, int(product_price * 100), amount_available, int(time.time())))
 
         database.commit()
         return redirect("/")  # Redirect to the marketplace page. Post should be visible immediately.

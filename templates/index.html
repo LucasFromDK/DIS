@@ -15,7 +15,7 @@
     {% if signed_in == False %}
     <a class="topButton" href="/signup">Sign Up</a>
     <a class="topButton" href="/login">Login</a>
-    {% elif not is_seller == True %}
+    {% elif is_seller == False %}
     <a class="topButton" href="/seller">Become Seller</a>
     <a class="topButton" href="/logout">Logout</a>
     {% else %}
@@ -59,9 +59,9 @@
     {% if signed_in == True %}
     <script src="../public/scripts/pullListings.js"></script>
     <h2>Marketplace Listings</h2>
-    <button class="marketplaceButton" onclick="fetchProducts()">Refresh Listings</button>
-    {% if person.is_seller %}
-    <button class="marketplaceButton" onclick="window.location.href='/create-listing'">Create Listing</button>
+    <button class="actionButton" onclick="fetchProducts()">Refresh Listings</button>
+    {% if is_seller == True %}
+    <button class="actionButton" onclick="window.location.href='/create-listing'">Create Listing</button>
     {% endif %}
     <!-- Listings Go Here Automatically -->
     <div class="listing-container">
