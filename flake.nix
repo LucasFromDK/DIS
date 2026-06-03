@@ -17,10 +17,23 @@
 
     # TODO: package our repo as a python package and add to docker image
     packages = forEachSystem (pkgs: rec {
+      default = pkgs.writeShellApplication {
+        name = "dis-flask-project";
+        runtimeInputs = with pkgs; [
+          (python3.withPackages (p: [p.flask]))
+          sqlite
+        ];
+        text = ''
+          cd ${./.}
+          flask run
+        '';
+      };
       docker-image = pkgs.dockerTools.buildLayeredImage {
         name = "ku-dis-flask-project";
-        tags = ["latest"];
-        contents = [];
+        tag = "latest";
+        contents = [
+          default
+        ];
       };
     });
 
