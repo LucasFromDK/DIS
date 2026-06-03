@@ -57,7 +57,7 @@
 
   <div align="center">
     {% if signed_in == True %}
-    <script src="../public/scripts/pullListings.js"></script>
+    <script type="module" src="../public/scripts/listingHandler.js"></script>
     <h2>Marketplace Listings</h2>
     <button class="actionButton" onclick="fetchProducts()">Refresh Listings</button>
     {% if is_seller == True %}
