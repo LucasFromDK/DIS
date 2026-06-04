@@ -100,7 +100,9 @@ def get_product_by_id(id):
                                 FROM products AS p
                                 LEFT JOIN sellers AS s ON p.sellerid = s.id
                                 LEFT JOIN users   AS u ON s.userid   = u.id
-                                AND p.id = ?;""", (id,))
+                                WHERE p.id = ?;""", (id,))
+    print(rows)
+
     if len(rows) == 0:
         return f"Product with id {id} not found", 404
 
