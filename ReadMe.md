@@ -49,8 +49,6 @@ run
 nix --extra-experimental-features "flakes nix-command" run .
 ```
 
-## Notes
-The Web-App is NOT optimised in any way, shape or form for mobile devices, it's intended use is PC or Laptop only.
 
 ## Provided Test Info
 ### User account with sell permission
@@ -80,15 +78,16 @@ When ran with `--debug` the website will always automatically log you in as this
 
 ### Credit Card
 We provide the following debug Credit Cards for checkout.
+
 Source: [Stripe](https://docs.stripe.com/testing)
 
 <div>
     <table style="text-align: center;">
         <thead>
             <tr>
-                <th style="width: 25%">Card Type</th>
+                <th style="width: 25%;">Card Type</th>
                 <th style="width: 25%;">Card Number</th>
-                <th style="width: 15%;">CVC</th>
+                <th style="width: 25%;">CVC</th>
                 <th style="width: 25%;">Expiration Date</th>
             </tr>
         </thead>
@@ -108,3 +107,6 @@ Source: [Stripe](https://docs.stripe.com/testing)
         </tbody>
     </table>
 </div>
+
+## Notes
+The Web-App is NOT optimised in any way, shape or form for mobile devices, it's intended use is PC or Laptop only.
