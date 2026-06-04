@@ -46,19 +46,65 @@ docker run --rm \
 ---
 run
 ```bash
-nix --extra-experimental-features "flakes nix-command" build .
+nix --extra-experimental-features "flakes nix-command" run .
 ```
 
 ## Notes
 The Web-App is NOT optimised in any way, shape or form for mobile devices, it's intended use is PC or Laptop only.
 
-## Provided Test Account(s)
+## Provided Test Info
+### User account with sell permission
 We provide the following test account(s) if unable to create your own login.
 
 
-|Email|Username|Password|
-|-----|--------|--------|
-|test@di.ku.dk|test|test1234|
+<div>
+    <table style="text-align: center;">
+        <thead>
+            <tr>
+                <th style="width: 33%;">Email</th>
+                <th style="wdith: 33%;">Username</th>
+                <th style="width: 33%;">Password</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            <td>test@di.ku.dk</td>
+            <td>test</td>
+            <td>test1234</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
+When ran with `--debug` the website will always automatically log you in as this user
 
-when ran with `--debug` the website will always automatically log you in as this user
+### Credit Card
+We provide the following debug Credit Cards for checkout.
+Source: [Stripe](https://docs.stripe.com/testing)
+
+<div>
+    <table style="text-align: center;">
+        <thead>
+            <tr>
+                <th style="width: 25%">Card Type</th>
+                <th style="width: 25%;">Card Number</th>
+                <th style="width: 15%;">CVC</th>
+                <th style="width: 25%;">Expiration Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Visa Credit</td>
+                <td>4242 4242 4242 4242</td>
+                <td>Any 3 digits</td>
+                <td>Any future date</td>
+            </tr>
+            <tr>
+                <td>UnionPay (19 digit)</td>
+                <td>6205 5000 0000 0000 004</td>
+                <td>Any 3 digits</td>
+                <td>Any future date</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -49,6 +49,7 @@ export default async function displayProducts(container, products, signedInUserI
                               // Buy Listing Logic
                               let sellerId = product.sellerid;
                               console.log(`Attempting to buy ${product.name} from ${product.sellername} (SID: ${sellerId}  LID: ${product.id})`);
+                              window.location.href = `../buy-listing?pid=${product.id}`;
                             });
 
                             listing.appendChild(buyButton);

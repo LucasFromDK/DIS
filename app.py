@@ -349,6 +349,88 @@ def create_listing_post():
                                 person = get_logged_in(request.cookies),
                                 error = f"Error: {error}")
 
+@app.route("/buy-listing")
+def buy_listing():
+    return render_template("buy-listing.html",
+                           signed_in = is_logged_in(request.cookies),
+                           card_number = None,
+                           card_expiration = None,
+                           cvc = None,
+                           delivery_address = None)
+
+@app.post("/buy-listing")
+def buy_listing_post():
+    card_number = request.form["card_number"].replace(" ", "")
+    card_expiration = request.form["card_expiration"]
+    cvc = request.form["cvc"]
+    delivery_address = request.form["delivery_address"]
+
+    # Check units available
+    cursor = database.query("SELECT units FROM products WHERE id = ?", (request.args.get("pid"),))
+    units_available = cursor.fetchone()[0]
+    if units_available <= 0:
+        error = "Sorry, this product is out of stock."
+
+    # Returns true if given card
+    # number is valid
+    def checkLuhn(cardNo):
+        nDigits = len(cardNo)
+        nSum = 0
+        isSecond = False
+
+        for i in range(nDigits - 1, -1, -1):
+            d = ord(cardNo[i]) - ord('0')
+
+            if (isSecond == True):
+                d = d * 2
+
+            # We add two digits to handle
+            # cases that make two digits after
+            # doubling
+            nSum += d // 10
+            nSum += d % 10
+
+            isSecond = not isSecond
+
+        if (nSum % 10 == 0):
+            return
+        else:
+            error = "Invalid card number. Please enter a valid card number from a supported issuer."
+            return error
+
+    # Check if card number is valid using Luhn's algorithm
+    error = checkLuhn(card_number)
+
+    # Check if valid expiration date (for simplicity, just check if it's in the format MM/YY and is a valid date in the future)
+    if not re.match(r"^(0[1-9]|1[0-2])\/\d{2}$", card_expiration):
+        error = "Invalid expiration date. Please enter a valid expiration date in the format MM/YY."
+    else:
+        month, year = map(int, card_expiration.split("/"))
+        year += 2000  # Convert YY to YYYY
+        current_year = time.localtime().tm_year
+        current_month = time.localtime().tm_mon
+        if year < current_year or (year == current_year and month < current_month):
+            error = "Card has expired. Please enter a valid expiration date in the future."
+
+    # Check CVC
+    if not re.match(r"^\d{3}$", cvc):
+        error = "Invalid CVC. Please enter a valid 3-digit CVC."
+
+    if not error == None:
+        return render_template("buy-listing.html",
+                               signed_in = is_logged_in(request.cookies),
+                               card_number = card_number,
+                               card_expiration = card_expiration,
+                               cvc = cvc,
+                               delivery_address = delivery_address,
+                               error = error)
+    else:
+        return redirect("/success?pid=" + request.args.get("pid"))
+
+@app.route("/success")
+def success():
+    return render_template("success.html")
+
 @app.route("/debug-test-session-token")
 def test_sesh():
     global sessions
@@ -358,7 +440,6 @@ def test_sesh():
     session = Session(time.time() + 1000.0, test_user)
     sessions[session.token] = session
     response.set_cookie("session_token", session.token.hex, max_age=1000)
-
     return response
 
 @app.get("/logout")
