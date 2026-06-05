@@ -157,13 +157,15 @@ def login_post():
     password = request.form["password"]
 
     cursor = database.query(f"SELECT id, username, email FROM users WHERE (username=? OR email=?) AND password=?", (username, username, password))
-    id,username,email = cursor.fetchone()
+    user = cursor.fetchone()
 
-    if id is None:
+    if user is None:
         return render_template("login.html",
                                signed_in = is_logged_in(request.cookies),
                                person = get_logged_in(request.cookies),
                                error = "Invalid username/email or password")
+
+    id,username,email = user
 
     user = User(id,username,email)
     session = Session(time.time() + 3600.0, user)
