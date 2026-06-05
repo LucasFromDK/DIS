@@ -37,6 +37,10 @@ class Database:
     def commit(self):
         self.connection.commit()
 
+    def rollback(self):
+        self.connection.rollback()
+
+
     def fill_with_fake_data(self):
         _fill_with_fake_users(self)
 

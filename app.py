@@ -132,7 +132,7 @@ def delete_product(id: int):
 @app.route("/api/sellers")
 def get_sellers():
     # Join products with sellers on sellerid to get the seller's name
-    return database.query_json("""SELECT s.id, u.username
+    return database.query_json("""SELECT s.id, u.username, s.escrow
                                  FROM sellers AS s
                                  LEFT JOIN users AS u ON s.userid = u.id
                                   """)
@@ -360,16 +360,45 @@ def buy_listing():
 
 @app.post("/buy-listing")
 def buy_listing_post():
+    unit_amount = int(request.form["unit_amount"])
     card_number = request.form["card_number"].replace(" ", "")
     card_expiration = request.form["card_expiration"]
     cvc = request.form["cvc"]
     delivery_address = request.form["delivery_address"]
 
+
+    render_error = lambda error: render_template("buy-listing.html",
+                               signed_in = is_logged_in(request.cookies),
+                               unit_amount = unit_amount,
+                               card_number = card_number,
+                               card_expiration = card_expiration,
+                               cvc = cvc,
+                               delivery_address = delivery_address,
+                               error = error)
+
+    pid = request.args.get("pid")
+
+    if pid is None:
+        return redirect("/")
+
+    cursor = database.query("SELECT p.id,p.price,p.units,p.sellerid,s.escrow FROM products AS p LEFT JOIN sellers AS s ON s.id = p.sellerid WHERE p.id = ?",(pid,)).fetchone()
+
+    if cursor is None:
+        # invalid product
+        return render_error(f"No product with id {pid} found!")
+
+    id,price,units,sellerid,escrow = cursor
+
+    if unit_amount < 1:
+        return render_error("Cannot buy less than 1 unit")
+
     # Check units available
-    cursor = database.query("SELECT units FROM products WHERE id = ?", (request.args.get("pid"),))
-    units_available = cursor.fetchone()[0]
-    if units_available <= 0:
-        error = "Sorry, this product is out of stock."
+    if units <= 0:
+        return render_error("Sorry, this product is out of stock.")
+
+    # Check units available
+    if units - unit_amount < 0:
+        return render_error(f"Sorry, but theres not enough stock left for you to buy {unit_amount} units")
 
     # Returns true if given card
     # number is valid
@@ -393,39 +422,40 @@ def buy_listing_post():
             isSecond = not isSecond
 
         if (nSum % 10 == 0):
-            return
+            return True
         else:
-            error = "Invalid card number. Please enter a valid card number from a supported issuer."
-            return error
+            return False
 
     # Check if card number is valid using Luhn's algorithm
-    error = checkLuhn(card_number)
+    if not checkLuhn(card_number):
+        return render_error("Invalid card number. Please enter a valid card number from a supported issuer.")
 
     # Check if valid expiration date (for simplicity, just check if it's in the format MM/YY and is a valid date in the future)
     if not re.match(r"^(0[1-9]|1[0-2])\/\d{2}$", card_expiration):
-        error = "Invalid expiration date. Please enter a valid expiration date in the format MM/YY."
+        return render_error("Invalid expiration date. Please enter a valid expiration date in the format MM/YY.")
     else:
         month, year = map(int, card_expiration.split("/"))
         year += 2000  # Convert YY to YYYY
         current_year = time.localtime().tm_year
         current_month = time.localtime().tm_mon
         if year < current_year or (year == current_year and month < current_month):
-            error = "Card has expired. Please enter a valid expiration date in the future."
+            return render_error("Card has expired. Please enter a valid expiration date in the future.")
 
     # Check CVC
     if not re.match(r"^\d{3}$", cvc):
-        error = "Invalid CVC. Please enter a valid 3-digit CVC."
+        return render_error("Invalid CVC. Please enter a valid 3-digit CVC.")
 
-    if not error == None:
-        return render_template("buy-listing.html",
-                               signed_in = is_logged_in(request.cookies),
-                               card_number = card_number,
-                               card_expiration = card_expiration,
-                               cvc = cvc,
-                               delivery_address = delivery_address,
-                               error = error)
-    else:
-        return redirect("/success?pid=" + request.args.get("pid"))
+
+    try:
+        _ = database.query("UPDATE products SET units = ? WHERE id = ?",(units - unit_amount, pid,))
+        if not sellerid is None:
+            _ = database.query("UPDATE sellers SET escrow = ? WHERE id = ?",((escrow or 0) + price, sellerid,))
+        database.commit()
+    except Exception as e:
+        database.rollback()
+        return render_error(f"An error occured when finalizing the purchase. Please try again: {e}")
+
+    return redirect(f"/success?pid={pid}&amount={unit_amount}")
 
 @app.route("/success")
 def success():
