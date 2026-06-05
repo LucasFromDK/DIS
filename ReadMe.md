@@ -74,7 +74,8 @@ We provide the following test account(s) if unable to create your own login.
     </table>
 </div>
 
-When ran with `--debug` the website will always automatically log you in as this user
+When ran with `--debug` the website will always automatically log you in as this user.
+Additionally, all the randomly generated users have the same password of "1234".
 
 ### Credit Card
 We provide the following debug Credit Cards for checkout.
