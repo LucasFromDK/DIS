@@ -18,6 +18,7 @@
     <a class="topButton" href="/seller">Become Seller</a>
     <a class="topButton" href="/logout">Logout</a>
     {% else %}
+    <a class="topButton" href="/account">My Account</a>
     <a class="topButton" href="/logout">Logout</a>
     {% endif %}
   </div>
@@ -38,7 +39,7 @@
 
     <div align="center">
         <h1>Supported Payment Cards</h1>
-        <p>Visa, MasterCard, UnionPay, Discover, Diners Club, JBC, </p>
+        <p>Visa, MasterCard, UnionPay, Discover, Diners Club, JBC</p>
     </div>
     <div align="center">
         <h1>Buy Listing</h1>
@@ -46,7 +47,7 @@
         <p id="product-info">Loading...</p>
         <form method="post" style="display: flex; flex-direction: column; max-width: 400px;">
             <!-- If product info is passed in set it in the inputs -->
-            <input required name="unit_amount" type="number" placeholder="Product amount" value="{{ unit_amount or 1 }}"/>
+            <input required name="unit_amount" type="number" placeholder="Product amount" value="{{ unit_amount or "" }}"/>
             <input required name="card_number" type="CardNumber" placeholder="Card Number" value="{{ card_number or "" }}"/>
             <input required name="card_expiration" type="CardExpiration" placeholder="Card Expiration" value="{{ card_expiration or "" }}"/>
             <input required name="cvc" type="CVC" placeholder="CVC" value="{{ cvc or "" }}"/>

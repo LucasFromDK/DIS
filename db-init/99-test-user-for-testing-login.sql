@@ -1,2 +1,4 @@
 INSERT INTO users (username, email, password)
-VALUES ("Test_User","test@di.ku.dk","test1234")
+VALUES
+("Test1","test1@di.ku.dk","test1"),
+("Test2","test2@di.ku.dk","test2")

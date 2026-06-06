@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>KU Student Marketplace | Become Seller</title>
+  <title>KU Student Marketplace | My Account</title>
   <link rel="stylesheet" href="../public/css/style.css">
   <link rel="stylesheet" href="../public/css/darkmode.css">
   <link rel="shortcut icon" type="image/ico" href="../public/favicon.ico">
@@ -11,8 +11,16 @@
 <body>
   <div class="topnav">
     <a class="topButton" href="/">Marketplace</a>
-    <a class="active" href="/seller">Become Seller</a>
+    {% if signed_in == False %}
+    <a class="topButton" href="/signup">Sign Up</a>
+    <a class="topButton" href="/login">Login</a>
+    {% elif is_seller == False %}
+    <a class="topButton" href="/seller">Become Seller</a>
     <a class="topButton" href="/logout">Logout</a>
+    {% else %}
+    <a class="active" href="/account">My Account</a>
+    <a class="topButton" href="/logout">Logout</a>
+    {% endif %}
   </div>
 
   <button id="theme-switch">
@@ -28,17 +36,21 @@
     </svg>
   </button>
   <script src="../public/scripts/darkmode.js"></script>
+
   <div align="center">
-    <h1>Become a Seller</h1>
-    <p>Fill out the form below to become a seller on the KU Student Marketplace. TODO</p>
-    <form method="post" style="display: flex; flex-direction: column; max-width: 400px;">
-      {% if error != None %}
-      <p class="WrongInput">{{error}}</p>
-      {% else %}
-      <br>
-      {% endif %}
-      <input class="actionButton" type="submit" value="Register" />
-    </form>
+    <h1>My Account</h1>
+    <h2>Information</h2>
+    <p>Name: {{ person.name }}</p>
+    <p>Email: {{ person.email }}</p>
+    <p>Money Earned: {{ seller_escrow }}</p>
+  </div>
+
+  <!-- Product listings by seller will be displayed here -->
+  <div align="center">
+    <script type="module" src="../public/scripts/listingHandler.js"></script>
+    <h2>My Products</h2>
+    <button class="actionButton" onclick="fetchProducts('.listing-container')">Refresh Listings</button>
+    <div class="listing-container"></div>
   </div>
 </body>
 

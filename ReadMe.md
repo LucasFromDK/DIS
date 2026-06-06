@@ -66,9 +66,14 @@ We provide the following test account(s) if unable to create your own login.
         </thead>
         <tbody>
             <tr>
-            <td>test@di.ku.dk</td>
-            <td>test</td>
-            <td>test1234</td>
+                <td>test1@di.ku.dk</td>
+                <td>Test1</td>
+                <td>test1</td>
+            </tr>
+            <tr>
+                <td>test2@di.ku.dk</td>
+                <td>Test2</td>
+                <td>test2</td>
             </tr>
         </tbody>
     </table>

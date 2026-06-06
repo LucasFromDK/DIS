@@ -392,7 +392,7 @@ def buy_listing_post():
     id,price,units,sellerid,escrow = cursor
 
     if unit_amount < 1:
-        return render_error("Cannot buy less than 1 unit")
+        return render_error(f"Can't' buy less than 1 unit, {unit_amount} is not valid.")
 
     # Check units available
     if units <= 0:
@@ -402,8 +402,7 @@ def buy_listing_post():
     if units - unit_amount < 0:
         return render_error(f"Sorry, but theres not enough stock left for you to buy {unit_amount} units")
 
-    # Returns true if given card
-    # number is valid
+    # Returns true if given card number is valid
     def checkLuhn(cardNo):
         nDigits = len(cardNo)
         nSum = 0
@@ -415,9 +414,7 @@ def buy_listing_post():
             if (isSecond == True):
                 d = d * 2
 
-            # We add two digits to handle
-            # cases that make two digits after
-            # doubling
+            # We add two digits to handle cases that make two digits after doubling
             nSum += d // 10
             nSum += d % 10
 
@@ -447,11 +444,10 @@ def buy_listing_post():
     if not re.match(r"^\d{3}$", cvc):
         return render_error("Invalid CVC. Please enter a valid 3-digit CVC.")
 
-
     try:
         _ = database.query("UPDATE products SET units = ? WHERE id = ?",(units - unit_amount, pid,))
         if not sellerid is None:
-            _ = database.query("UPDATE sellers SET escrow = ? WHERE id = ?",((escrow or 0) + price, sellerid,))
+            _ = database.query("UPDATE sellers SET escrow = ? WHERE id = ?",((escrow or 0) + price * unit_amount, sellerid,))
         database.commit()
     except Exception as e:
         database.rollback()
@@ -462,6 +458,21 @@ def buy_listing_post():
 @app.route("/success")
 def success():
     return render_template("success.html")
+
+@app.route("/account")
+def account():
+    user = get_logged_in(request.cookies)
+    if user is None:
+        return redirect("/login")
+
+    seller_escrow = database.query("SELECT escrow FROM sellers AS s WHERE s.userid = ?", (user.id,)).fetchone()
+    if not seller_escrow is None:
+        seller_escrow = f"{seller_escrow[0] / 100:.2f} DKK" # Convert from float to int
+
+    return render_template("account.html",
+                           signed_in = is_logged_in(request.cookies),
+                           person = get_logged_in(request.cookies),
+                           seller_escrow = seller_escrow)
 
 @app.route("/debug-test-session-token")
 def test_sesh():

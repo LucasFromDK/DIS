@@ -19,6 +19,7 @@
     <a class="topButton" href="/seller">Become Seller</a>
     <a class="topButton" href="/logout">Logout</a>
     {% else %}
+    <a class="topButton" href="/account">My Account</a>
     <a class="topButton" href="/logout">Logout</a>
     {% endif %}
   </div>
@@ -59,7 +60,7 @@
     {% if signed_in == True %}
     <script type="module" src="../public/scripts/listingHandler.js"></script>
     <h2>Marketplace Listings</h2>
-    <button class="actionButton" onclick="fetchProducts()">Refresh Listings</button>
+    <button class="actionButton" onclick="fetchProducts('.listing-container')">Refresh Listings</button>
     {% if is_seller == True %}
     <button class="actionButton" onclick="window.location.href='/create-listing'">Create Listing</button>
     {% endif %}
