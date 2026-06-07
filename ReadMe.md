@@ -144,7 +144,7 @@ The Web-App is NOT optimised in any way, shape or form for mobile devices, it's 
 ## ER Diagram
 ![ER Diagram](ER%20Diagram.png)
 
-``product.sellerUserId`` is not a part of the database even though it appears, it's a fix for a front-end issue.
+``product.userId`` is not a part of the database even though it appears, it's a fix for a front-end issue.
 
 ## AI Declaration
 <object data="https://github.com/LucasFromDK/DIS/blob/main/AI_Declaration.pdf" type="application/pdf" width="700px" height="700px">
