@@ -1,4 +1,11 @@
-<h1 align="center">DIS Project</h1>
+<div align="center">
+    <h1>DIS Project</h1>
+    <h2>Authors</h2>
+    <p>Lucas L (zdw760)</p>
+    <p>Magnus E (rqv811)</p>
+    <p>Malthe J (xsf318)</p>
+    <p>Snorre A (lkx526)</p>
+</div>
 
 ## Requirements
 ### Documentation
@@ -116,3 +123,13 @@ Source: [Stripe](https://docs.stripe.com/testing)
 
 ## Notes
 The Web-App is NOT optimised in any way, shape or form for mobile devices, it's intended use is PC or Laptop only.
+
+## ER Diagram
+![ER Diagram](ER%20Diagram.png)
+
+## AI Declaration
+<object data="https://github.com/LucasFromDK/DIS/blob/main/AI_Declaration.pdf" type="application/pdf" width="700px" height="700px">
+    <embed src="https://github.com/LucasFromDK/DIS/blob/main/AI_Declaration.pdf">
+        <p>This browser does not support embedded PDFs. Please open the PDF to view it: <a href="https://github.com/LucasFromDK/DIS/blob/main/AI_Declaration.pdf">Open PDF</a>.</p>
+    </embed>
+</object>
