@@ -86,11 +86,16 @@ def check_logged_in():
 
 @app.route("/api/products")
 def get_products():
-    # Join products with sellers on sellerid to get the seller's name
-    return database.query_json("""SELECT p.*, u.username as sellername
-                                FROM products AS p
-                                LEFT JOIN sellers AS s ON p.sellerid = s.id
-                                LEFT JOIN users   AS u ON s.userid   = u.id;""")
+    # Join products with sellers on sellerid to get the seller's name and seller's user id for checking if the logged in user is the seller of a product (for displaying delete button on frontend)
+    return database.query_json("""
+        SELECT
+            p.*,
+            u.username AS sellername,
+            u.id   AS userid
+        FROM products AS p
+        LEFT JOIN sellers AS s ON p.sellerid = s.id
+        LEFT JOIN users   AS u ON s.userid   = u.id;
+    """)
 
 
 @app.route("/api/product(<int:id>)")
@@ -326,6 +331,7 @@ def create_listing_post():
                                error = error)
     try:
         cursor = database.query(f"SELECT id FROM sellers WHERE userid = ?", (user.id,))
+        # Set seller_id to the ID of the signed in user when creating a listing.
         seller_id, = cursor.fetchone()
 
         # This should never happen but a final safety check to ensure the user is actually a seller before allowing them to create a listing.

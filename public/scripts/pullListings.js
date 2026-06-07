@@ -22,7 +22,6 @@ export default async function fetchProducts(targetContainer) {
 		// Show Loading animation for 1 second.
 		setTimeout(() => {
 			container.classList.remove("loading")
-			console.log(products)
 			displayProducts(container, products, signedInUserId);
 		}, 1000);
 

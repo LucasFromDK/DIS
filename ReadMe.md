@@ -46,6 +46,14 @@ docker run --rm \
     --debug \
     --host 0.0.0.0
 ```
+### How to Interact
+First you need to sign in or create an account. We have provided login credentials for a test account <a href="#provided-test-info">here</a>.
+
+Once signed in you can become a seller to create listings and you can also buy listings without the need to become a seller.
+
+We have provided test credit card numbers for checkout <a href="#credit-card">here</a> courtesy of [Stripe](https://docs.stripe.com/testing).
+
+As a seller you can check the My Account page to see how much revenue you have generated.
 
 ## Building docker image
 ### Requirements
@@ -66,9 +74,10 @@ We provide the following test account(s) if unable to create your own login.
     <table style="text-align: center;">
         <thead>
             <tr>
-                <th style="width: 33%;">Email</th>
-                <th style="wdith: 33%;">Username</th>
-                <th style="width: 33%;">Password</th>
+                <th style="width: 25%;">Email</th>
+                <th style="wdith: 25%;">Username</th>
+                <th style="width: 25%;">Password</th>
+				<th style="width: 25%">Seller</th>
             </tr>
         </thead>
         <tbody>
@@ -76,11 +85,19 @@ We provide the following test account(s) if unable to create your own login.
                 <td>test1@di.ku.dk</td>
                 <td>Test1</td>
                 <td>test1</td>
+				<td>Yes</td>
             </tr>
             <tr>
                 <td>test2@di.ku.dk</td>
                 <td>Test2</td>
                 <td>test2</td>
+				<td>Yes</td>
+            </tr>
+			<tr>
+                <td>test3@di.ku.dk</td>
+                <td>Test3</td>
+                <td>test3</td>
+				<td>No</td>
             </tr>
         </tbody>
     </table>
@@ -126,6 +143,8 @@ The Web-App is NOT optimised in any way, shape or form for mobile devices, it's 
 
 ## ER Diagram
 ![ER Diagram](ER%20Diagram.png)
+
+``product.sellerUserId`` is not a part of the database even though it appears, it's a fix for a front-end issue.
 
 ## AI Declaration
 <object data="https://github.com/LucasFromDK/DIS/blob/main/AI_Declaration.pdf" type="application/pdf" width="700px" height="700px">

@@ -26,7 +26,7 @@ export default async function displayProducts(container, products, signedInUserI
                           <p>Seller: ${product.sellername}</p>
                           <p>Listed: ${listingDate} </p>`
 		// Check if Seller is the logged in user, if so, add a delete button to the listing.
-		if (product.sellerid == signedInUserId) {
+		if (product.userid == signedInUserId) {
 			// Button to delete the listing
 			let deleteButton = document.createElement('button');
 			deleteButton.classList.add('actionButton');
@@ -34,7 +34,6 @@ export default async function displayProducts(container, products, signedInUserI
 
 			deleteButton.addEventListener('click', async () => {
 				// Remove Listing Logic
-				console.log(`Deleting listing with LID: ${product.id}`);
 				await removeListing(product.id);
 			});
 
@@ -47,8 +46,6 @@ export default async function displayProducts(container, products, signedInUserI
 
 			buyButton.addEventListener('click', () => {
 				// Buy Listing Logic
-				let sellerId = product.sellerid;
-				console.log(`Attempting to buy ${product.name} from ${product.sellername} (SID: ${sellerId}  LID: ${product.id})`);
 				window.location.href = `../buy-listing?pid=${product.id}`;
 			});
 

@@ -3,7 +3,6 @@ from pathlib import Path
 import sqlite3
 import random
 from typing import Any
-import tempfile
 
 DATABASE_PATH = os.environ.get("DIS_DATABASE", "app.db")
 
@@ -67,15 +66,13 @@ def _fill_with_fake_users(database: Database):
         "Witherspoon",
         "Bottle",
     ]
-    for _ in range(50):
+    for i in range(50):
         try:
             name = random.choice(first_names)
             username = name + " " + random.choice(last_names)
             email = f"{name.lower()}{random.randint(111,999)}@di.ku.dk"
-            database.query("INSERT INTO users (username, email, password) VALUES (?,?,?)", (username, email, "1234"))
+            id = i + 3 # Avoiding conflict with Seller Test Users with ID 1 and 2
+            database.query("INSERT INTO users (id, username, email, password) VALUES (?,?,?,?)", (id, username, email, "1234"))
         except:
             pass
     database.commit()
-
-def _fill_with_fake_products(database: Database):
-    raise NotImplemented()

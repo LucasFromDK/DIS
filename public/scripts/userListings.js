@@ -19,7 +19,12 @@ export default async function displayUserListings(container) {
 		// Show Loading animation for 1 second.
 		setTimeout(() => {
 			containerElement.classList.remove("loading")
-			const userProducts = products.filter(product => product.sellerid === signedInUserId);
+			const userProducts = products.filter(product => product.userid === signedInUserId);
+			// If no products, show message.
+			if (userProducts.length === 0) {
+				containerElement.innerText = 'You have no active listings. Create one from the Create Listing page!';
+				return;
+			}
 			displayProducts(containerElement, userProducts, signedInUserId);
 		}, 1000);
 	} catch (error) {
