@@ -19,6 +19,10 @@ export default async function displayProducts(container, products, signedInUserI
 			minute: "2-digit"
 		});
 
+		if (product.price === 0) {
+			price = 'Free';
+		}
+
 		listing.innerHTML = `<h3>${product.name}</h3>
                           <p>${product.description}</p>
                           <p>Price: ${price}</p>
