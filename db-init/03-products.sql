@@ -5,5 +5,5 @@ CREATE TABLE products(
   description VARCHAR[400]    NOT NULL DEFAULT "",
   price       INTEGER         NOT NULL DEFAULT 0,
   units       INTEGER         NOT NULL DEFAULT 0,
-  createdOn   LONG            NOT NULL DEFAULT 0
+  createdOn   LONG            NOT NULL DEFAULT (STRFTIME('%s', 'now'))
 )

@@ -161,7 +161,7 @@ def login_post():
     username = request.form["username"]
     password = request.form["password"]
 
-    cursor = database.query(f"SELECT id, username, email FROM users WHERE (username=? OR email=?) AND password=?", (username, username, password))
+    cursor = database.query(f"SELECT id, username, email FROM users WHERE (LOWER(username)=LOWER(?) OR LOWER(email)=LOWER(?)) AND password=?", (username, username, password))
     user = cursor.fetchone()
 
     if user is None:
